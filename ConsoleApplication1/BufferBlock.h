@@ -2,6 +2,8 @@
 
 #include "../BufferBlockADT.h"
 
+#include <iostream>
+
 class BufferBlock : public BufferblockADT {
 private:
 	int blockID;
@@ -18,11 +20,12 @@ public:
             end = this->size - 1;
         }
         else {
-            end = sz - 1;
+            end = pos + sz - 1;
         }
-        for (int i = pos; i < end; i++) {
-            data[i] = block[i];
+        for (int i = 0; i + pos < end; i++) {
+            data[i] = block[i + pos];
         }
+
     }
 
     //setID

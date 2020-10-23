@@ -21,8 +21,8 @@ public:
 	LRUBufferPool(string filename, int poolSize = 5, int blockSize = 4096) : poolSize{ poolSize }, blockSize{ blockSize } {
 		file.open(filename.c_str(), fstream::in | fstream::binary);
 		pool = new BufferBlock*[poolSize];
-		file.seekg(0);
 		for (int i = 0; i < poolSize; i++) {
+			file.seekg(i * blockSize);
 			char* data = new char[blockSize];
 			file.read(data, blockSize);
 			pool[i] = new BufferBlock(data, i, blockSize);
@@ -37,6 +37,7 @@ public:
 	//   storage to "space".
 	void getBytes(char* space, int sz, int pos) {
 		int id = pos / blockSize;
+		
 		BufferBlock* block;
 		int index = this->indexOf(id);
 		// Find block
@@ -45,11 +46,13 @@ public:
 		}
 		else {
 			char* data = new char[blockSize];
+			file.seekg(id * blockSize);
+			file.read(data, blockSize);
 			block = new BufferBlock(data, id, blockSize);
 		}
 
 		// Get data, assign it to space
-		block->getData((pos - id * blockSize), sz, space);
+		block->getData(pos - (id * blockSize), sz, space);
 
 		// Update pool with LRU heuristic
 		if (index >= 0) {
