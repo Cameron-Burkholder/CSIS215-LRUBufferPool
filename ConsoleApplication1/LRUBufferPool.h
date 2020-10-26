@@ -65,7 +65,6 @@ public:
 				}
 			}
 			pool[poolSize - 1] = temp;
-			this->updatePool();
 		}
 		// Delete last element in buffer 
 		// Assign new block to last position 
@@ -73,8 +72,8 @@ public:
 		else {
 			delete pool[poolSize - 1];
 			pool[poolSize - 1] = block;
-			this->updatePool();
 		}
+		this->updatePool();
 
 	}
 

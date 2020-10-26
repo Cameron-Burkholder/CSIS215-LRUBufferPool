@@ -7,6 +7,7 @@
 
 #include "constants.h"
 #include "./ConsoleApplication1/LRUBufferPool.h"
+#include "./ConsoleApplication1/BufferBlock.h"
 
 using namespace std;
 
@@ -59,6 +60,32 @@ int main() {
     bp->getBytes(data, 10, 16600);
     printChars(data, 10, 16600/BLOCKSIZE);
     bp->printBufferBlockOrder();
+
+    // CAMERON BURKHOLDER - TESTS 
+    // LRUBufferPool
+    cout << "LRU ID: " << bp->getLRUBlockID() << endl;
+
+    // BufferBlock 
+    bp->getBytes(data, 10, 0);
+    BufferBlock *block = new BufferBlock(data, 0, BLOCKSIZE);
+    char* newData = new char[BLOCKSIZE];
+    block->getData(0, BLOCKSIZE, newData);
+    cout << "New Data: " << newData << endl;
+
+    cout << "ID: " << block->getID() << endl;
+    cout << "Setting ID to 4" << endl;
+    block->setID(4);
+    cout << "New ID: " << block->getID() << endl;
+
+    cout << "Blocksize (Should be 4096): " << block->getBlocksize() << endl;
+
+    cout << "Getting block: " << block->getBlock() << endl;
+    cout << "Setting block to last value of data:" << endl;
+    initializeCharArray(10, data);
+    bp->getBytes(data, 10, 28700);
+    block->setBlock(data);
+    cout << "New block: " << block->getBlock() << endl;
+
 	
 	//close program
 	cout << endl << endl;
